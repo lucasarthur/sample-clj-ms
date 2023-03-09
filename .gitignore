@@ -1,7 +1,6 @@
 # Lein/Clojure stuff
 .lein-failures
 .lein-repl-history
-profiles.clj
 .cpcache/
 /.lein-*
 /.nrepl-port
