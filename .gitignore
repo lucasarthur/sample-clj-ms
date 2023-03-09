@@ -1,0 +1,30 @@
+# Lein/Clojure stuff
+.lein-failures
+.lein-repl-history
+profiles.clj
+.cpcache/
+/.lein-*
+/.nrepl-port
+/.prepl-port
+
+# JVM build files
+target/
+/classes
+/checkouts
+*.jar
+*.class
+
+# VSCode
+.vscode/
+.calva/
+.clj-kondo/
+.lsp/
+
+# Eclipse stuff
+.project
+.classpath
+.settings/
+
+# Maven
+pom.xml
+pom.xml.asc
