@@ -9,6 +9,9 @@
    :headers {"content-type" "application/json"}
    :body (->> (/ 1 0) (hash-map :result) generate-string)})
 
+(defn nice-exception-handler [_]
+  (throw (ex-info "now that's what i call an exception!" {:status 422})))
+
 (defn root-handler [_]
   {:status 200
    :headers {"content-type" "application/json"}
