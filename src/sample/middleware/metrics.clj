@@ -15,8 +15,9 @@
 (defn wrap-iapetos [handler]
   (ring/wrap-metrics handler registry metrics-cfg-map))
 
-(defn wrap-health-checks [handler]
-  (routes health-checks handler))
+(defn wrap-health-checks [handler ready-check]
+  (routes (health-checks ready-check) handler))
 
-(defn wrap-metrics [handler]
-  (-> handler wrap-iapetos wrap-health-checks))
+(defn wrap-metrics
+  ([handler] (wrap-metrics handler nil))
+  ([handler ready-check] (-> handler wrap-iapetos (wrap-health-checks ready-check))))

@@ -5,6 +5,7 @@
    [com.brunobonacci.mulog :refer [log]]
    [sample.config.log :refer [init-logs]]
    [sample.config.server :refer [server-cfg-map]]
+   [sample.config.metrics :refer [set-health-status!]]
    [sample.routes :refer [routes]]
    [sample.middleware.log :refer [log-http-requests]]
    [sample.middleware.exception :refer [wrap-exceptions]]
@@ -13,12 +14,13 @@
   (:gen-class))
 
 (def api (-> routes
-             wrap-metrics
              wrap-exceptions
+             wrap-metrics
              (wrap-defaults api-defaults)
              log-http-requests))
 
 (defn -main []
   (init-logs)
   (let [server (start-server api server-cfg-map)]
-    (log ::server-started :port (port server))))
+    (log ::server-started :port (port server))
+    (set-health-status! :up)))
