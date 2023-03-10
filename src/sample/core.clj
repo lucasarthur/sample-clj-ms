@@ -12,9 +12,13 @@
    [ring.middleware.defaults :refer [wrap-defaults api-defaults]])
   (:gen-class))
 
-(def api (-> routes log-http-requests wrap-metrics wrap-exceptions (wrap-defaults api-defaults)))
+(def api (-> routes
+             wrap-metrics
+             wrap-exceptions
+             (wrap-defaults api-defaults)
+             log-http-requests))
 
 (defn -main []
   (init-logs)
   (let [server (start-server api server-cfg-map)]
-    (log ::server-started :on-port (port server))))
+    (log ::server-started :port (port server))))
