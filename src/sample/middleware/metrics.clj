@@ -3,24 +3,14 @@
    [iapetos.core :refer [collector-registry register histogram]]
    [iapetos.collector.jvm :as jvm]
    [iapetos.collector.ring :as ring]
-   [compojure.core :refer [routes context GET]]
-   [sample.config.metrics :refer [metrics-cfg-map]]))
+   [compojure.core :refer [routes]]
+   [sample.config.metrics :refer [metrics-cfg-map health-checks]]))
 
 (defonce registry
   (-> (collector-registry)
       (register (histogram :app/duration-seconds))
       (jvm/initialize)
       (ring/initialize)))
-
-(def ^:private health-path
-  (str (:path metrics-cfg-map) "/health"))
-
-(def ^:private health-checks
-  (routes
-   (context health-path []
-     (GET "/" [] "ok")
-     (GET "/liveness" [] "ok")
-     (GET "/readiness" [] "ok"))))
 
 (defn wrap-iapetos [handler]
   (ring/wrap-metrics handler registry metrics-cfg-map))
