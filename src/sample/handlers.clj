@@ -4,6 +4,11 @@
    [cheshire.core :refer [generate-string]]
    [sample.util.sse :refer [->sse]]))
 
+(defn divide-by-zero-handler [_]
+  {:status 200
+   :headers {"content-type" "application/json"}
+   :body (->> (/ 1 0) (hash-map :result) generate-string)})
+
 (defn root-handler [_]
   {:status 200
    :headers {"content-type" "application/json"}
