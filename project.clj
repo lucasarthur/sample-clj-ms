@@ -18,7 +18,8 @@
                  [com.github.seancorfield/next.jdbc "1.3.858"]                                       ;; jdcb client
                  [com.github.seancorfield/honeysql "2.4.1002"]                                       ;; sql clojure dsl
                  [lobos "1.0.0-beta3"]                                                               ;; sql migration
-                 [clj-commons/iapetos "0.1.13"]]                                                     ;; prometheus client - metrics
+                 [clj-commons/iapetos "0.1.13"]                                                      ;; prometheus client - metrics
+                 [io.prometheus/simpleclient_hotspot "0.16.0"]]                                      ;; jvm metrics
   :plugins [[lein-environ "1.2.0"]]                                                                  ;; generate .lein-env based on :env from project
   :main ^:skip-aot sample.core
   :profiles {:uberjar {:aot :all

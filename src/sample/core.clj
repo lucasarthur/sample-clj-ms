@@ -8,10 +8,11 @@
    [sample.routes :refer [routes]]
    [sample.middleware.log :refer [log-http-requests]]
    [sample.middleware.exception :refer [wrap-exceptions]]
+   [sample.middleware.metrics :refer [wrap-metrics]]
    [ring.middleware.defaults :refer [wrap-defaults api-defaults]])
   (:gen-class))
 
-(def api (-> routes wrap-exceptions (wrap-defaults api-defaults) log-http-requests))
+(def api (-> routes log-http-requests wrap-metrics wrap-exceptions (wrap-defaults api-defaults)))
 
 (defn -main []
   (init-logs)
