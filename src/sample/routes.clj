@@ -1,6 +1,6 @@
 (ns sample.routes
   (:require
-   [sample.handlers :refer :all]
+   [sample.handlers :refer [root-handler echo-handler uuid-handler divide-by-zero-handler nice-exception-handler not-found-handler]]
    [sample.middleware.sse :refer [wrap-raw-sse-response]]
    [compojure.core :refer [defroutes GET]]
    [compojure.route :refer [not-found]]))

@@ -4,6 +4,8 @@
   :license {:name "GNU General Public License v3.0"
             :url "https://www.gnu.org/licenses/gpl-3.0.pt-br.html"}
   :dependencies [[org.clojure/clojure "1.11.1"]                                                      ;; clojure, of coure
+                 [metosin/ring-swagger "0.26.2"]                                                     ;; openAPI specs and
+                 [metosin/ring-swagger-ui "5.0.0-alpha.0"]                                           ;; swagger-ui
                  [manifold "0.3.0" :exclusions [org.clj-commons/dirigiste]]                          ;; async and event-driven communication
                  [aleph "0.6.1"]                                                                     ;; netty async web server
                  [ring/ring-defaults "0.3.4"]                                                        ;; wrap-defaults
