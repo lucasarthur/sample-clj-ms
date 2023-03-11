@@ -3,4 +3,5 @@
 
 {:dev {:env {:port "8080"
              :log-level "info"
-             :metrics-path "/metrics"}}}
+             :metrics-path "/metrics"
+             :swagger-path "/api-docs"}}}

@@ -10,6 +10,7 @@
    [sample.middleware.log :refer [log-http-requests]]
    [sample.middleware.exception :refer [wrap-exceptions]]
    [sample.middleware.metrics :refer [wrap-metrics]]
+   [sample.middleware.swagger :refer [wrap-swagger]]
    [ring.middleware.defaults :refer [wrap-defaults api-defaults]])
   (:gen-class))
 
@@ -17,7 +18,8 @@
              wrap-exceptions
              wrap-metrics
              (wrap-defaults api-defaults)
-             log-http-requests))
+             log-http-requests
+             wrap-swagger))
 
 (defn -main []
   (init-logs)
