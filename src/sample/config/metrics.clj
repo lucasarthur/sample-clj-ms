@@ -1,8 +1,6 @@
 (ns sample.config.metrics
   (:require [environ.core :refer [env]]))
 
-(def metrics-cfg-map {:path (env :metrics-path)})
-
 (def health-statuses {:up   {:status 200 :message "up"}
                       :down {:status 503 :message "down"}})
 

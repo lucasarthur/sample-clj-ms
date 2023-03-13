@@ -1,10 +1,11 @@
 (ns sample.middleware.metrics
   (:require
+   [environ.core :refer [env]]
    [iapetos.core :refer [collector-registry register histogram]]
    [iapetos.collector.jvm :as jvm]
    [iapetos.collector.ring :as ring]
    [compojure.core :refer [routes context GET]]
-   [sample.config.metrics :refer [metrics-cfg-map health-path get-health-status health-statuses]]
+   [sample.config.metrics :refer [health-path get-health-status health-statuses]]
    [sample.middleware.json :refer [wrap-json-response]]))
 
 (defn- health-handler [status _]
@@ -31,7 +32,7 @@
      (GET "/readiness" [] (->> (or ready-check (constantly true)) (test-readiness) (json-health-handler))))))
 
 (defn wrap-iapetos [handler]
-  (ring/wrap-metrics handler registry metrics-cfg-map))
+  (ring/wrap-metrics handler registry {:path (env :metrics-path)}))
 
 (defn wrap-health-checks [handler ready-check]
   (routes (health-checks ready-check) handler))

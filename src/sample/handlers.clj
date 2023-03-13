@@ -3,7 +3,8 @@
    [manifold.stream :as s]
    [cheshire.core :refer [generate-string]]
    [sample.util.sse :refer [->sse]]
-   [sample.producer.greeter-producer :refer [produce-greeting]]))
+   [sample.producer.greeter-producer :refer [produce-greeting]]
+   [sample.consumer.greeter-consumer :refer [raw-events]]))
 
 (defn divide-by-zero-handler [_]
   {:status 200
@@ -29,6 +30,10 @@
 (defn produce-greeting-handler [name greeting]
   (produce-greeting {:greeting (str name " says " (or greeting "hi") "!")})
   {:status 202})
+
+(defn consume-greetings-handler [_]
+  {:status 200
+   :body (s/map ->sse raw-events)})
 
 (defn not-found-handler [_]
   {:status 404

@@ -6,7 +6,7 @@
   (:import [org.slf4j LoggerFactory]))
 
 (defn slf4j-logger
-  ([] (slf4j-logger *ns*))
+  ([] (slf4j-logger (str *ns*)))
   ([log-ns] (LoggerFactory/getLogger log-ns)))
 
 (defn init-logs
