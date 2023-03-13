@@ -5,7 +5,4 @@
 (defn ->sse
   ([data] (->sse data "message"))
   ([data event] (->sse data event (random-uuid)))
-  ([data event id]
-   (-> (str "id:" id EOL)
-       (str "event:" event EOL)
-       (str "data:" data EOL EOL))))
+  ([data event id] (-> (str "id:" id EOL "event:" event EOL "data:" data EOL EOL))))

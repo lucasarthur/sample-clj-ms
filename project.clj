@@ -11,7 +11,6 @@
                  [ring/ring-defaults "0.3.4"]                                                        ;; wrap-defaults
                  [ring/ring-json "0.5.1"]                                                            ;; wrap-json
                  [compojure "1.7.0"]                                                                 ;; routing
-                 [metosin/compojure-api "2.0.0-alpha31"]                                             ;; swagger, etc
                  [cheshire "5.11.0"]                                                                 ;; json
                  [com.appsflyer/ketu "1.0.0" :exclusions [org.slf4j/slf4j-api]]                      ;; async kafka client
                  [com.brunobonacci/mulog "0.9.0"]                                                    ;; logs (guess what, async)

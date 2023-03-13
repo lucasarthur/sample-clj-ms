@@ -18,14 +18,15 @@
   (or (-> e ex-data :status) 500))
 
 (defn wrap-exceptions [handler]
-  (fn [req] (try (handler req)
-                 (catch ExceptionInfo e
-                   (log :error :exception e :data (ex-data e))
-                   {:status (extract-status e)
-                    :headers {"content-type" "application/json"}
-                    :body (-> e exception-info->json)})
-                 (catch Exception e
-                   (log :error :exception e)
-                   {:status 500
-                    :headers {"content-type" "application/json"}
-                    :body (-> e exception->json)}))))
+  (fn [req]
+    (try (handler req)
+         (catch ExceptionInfo e
+           (log :error :exception e :data (ex-data e))
+           {:status (extract-status e)
+            :headers {"content-type" "application/json"}
+            :body (-> e exception-info->json)})
+         (catch Exception e
+           (log :error :exception e)
+           {:status 500
+            :headers {"content-type" "application/json"}
+            :body (-> e exception->json)}))))

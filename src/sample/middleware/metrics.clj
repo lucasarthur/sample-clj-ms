@@ -1,20 +1,22 @@
 (ns sample.middleware.metrics
   (:require
+   [environ.core :refer [env]]
    [iapetos.core :refer [collector-registry register histogram]]
    [iapetos.collector.jvm :as jvm]
    [iapetos.collector.ring :as ring]
    [compojure.core :refer [routes context GET]]
-   [cheshire.core :refer [generate-string]]
-   [sample.config.metrics :refer [metrics-cfg-map health-path get-health-status health-statuses]]))
+   [sample.config.metrics :refer [health-path get-health-status health-statuses]]
+   [sample.middleware.json :refer [wrap-json-response]]))
 
 (defn- health-handler [status _]
   {:status (:status status)
-   :headers {"content-type" "application/json"}
-   :body (generate-string {:message (:message status)})})
+   :body {:message (:message status)}})
 
-(defn- wrap-readiness-probe [ready? _]
-  (->> (if (ready?) (get-health-status) (:down health-statuses))
-       (partial health-handler)))
+(defn- test-readiness [ready?]
+  (if (ready?) (get-health-status) (:down health-statuses)))
+
+(defn- json-health-handler [status]
+  (->> status (partial health-handler) (wrap-json-response)))
 
 (defonce registry
   (-> (collector-registry)
@@ -25,12 +27,12 @@
 (defn health-checks [ready-check]
   (routes
    (context health-path []
-     (GET "/" [] (partial health-handler (get-health-status)))
-     (GET "/liveness" [] (partial health-handler (get-health-status)))
-     (GET "/readiness" [] (partial wrap-readiness-probe (or ready-check (constantly true)))))))
+     (GET "/" [] (json-health-handler (get-health-status)))
+     (GET "/liveness" [] (json-health-handler (get-health-status)))
+     (GET "/readiness" [] (->> (or ready-check (constantly true)) (test-readiness) (json-health-handler))))))
 
 (defn wrap-iapetos [handler]
-  (ring/wrap-metrics handler registry metrics-cfg-map))
+  (ring/wrap-metrics handler registry {:path (env :metrics-path)}))
 
 (defn wrap-health-checks [handler ready-check]
   (routes (health-checks ready-check) handler))

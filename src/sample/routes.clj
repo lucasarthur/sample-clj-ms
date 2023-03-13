@@ -1,14 +1,18 @@
 (ns sample.routes
   (:require
-   [sample.handlers :refer [root-handler echo-handler uuid-handler divide-by-zero-handler nice-exception-handler not-found-handler]]
-   [sample.middleware.sse :refer [wrap-raw-sse-response]]
-   [compojure.core :refer [defroutes GET]]
+   [sample.handlers :refer :all]
+   [sample.middleware.json :refer [wrap-json-response wrap-json]]
+   [sample.middleware.sse :refer [wrap-sse-response]]
+   [compojure.core :refer [defroutes GET POST]]
    [compojure.route :refer [not-found]]))
 
 (defroutes routes
-  (GET "/" [] root-handler)
-  (GET "/echo" [] echo-handler)
-  (GET "/sse/uuids" [] (wrap-raw-sse-response uuid-handler))
-  (GET "/divide-by-zero" [] divide-by-zero-handler)
-  (GET "/nice-exception" [] nice-exception-handler)
-  (not-found not-found-handler))
+  (GET "/" [] (wrap-json-response root-handler))
+  (GET "/echo" [] (wrap-json-response echo-handler))
+  (POST "/echo" [] (wrap-json echo-handler))
+  (GET "/sse/uuids" [] (wrap-sse-response uuid-handler))
+  (GET "/divide-by-zero" [] (wrap-json-response divide-by-zero-handler))
+  (GET "/nice-exception" [] (wrap-json-response nice-exception-handler))
+  (POST "/produce-greeting/:name" [name greeting] (produce-greeting-handler name greeting))
+  (GET "/sse/consume-greetings" [] (wrap-sse-response consume-greetings-handler))
+  (not-found (wrap-json-response not-found-handler)))
