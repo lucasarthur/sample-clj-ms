@@ -13,5 +13,5 @@
   (GET "/sse/uuids" [] (wrap-sse-response uuid-handler))
   (GET "/divide-by-zero" [] (wrap-json-response divide-by-zero-handler))
   (GET "/nice-exception" [] (wrap-json-response nice-exception-handler))
-  (POST "/produce-greeting" [] (wrap-json-response produce-greeting-handler))
+  (GET "/produce-greeting/:name" [name greeting] (produce-greeting-handler name greeting))
   (not-found (wrap-json-response not-found-handler)))

@@ -2,7 +2,8 @@
   (:require
    [manifold.stream :as s]
    [cheshire.core :refer [generate-string]]
-   [sample.util.sse :refer [->sse]]))
+   [sample.util.sse :refer [->sse]]
+   [sample.producer.greeter-producer :refer [produce-greeting]]))
 
 (defn divide-by-zero-handler [_]
   {:status 200
@@ -25,7 +26,9 @@
    :body (->> (s/periodically 2500 random-uuid)
               (s/map #(-> {:uuid %} generate-string ->sse)))})
 
-(defn produce-greeting-handler [_])
+(defn produce-greeting-handler [name greeting]
+  (produce-greeting {:greeting (str name " says " (or greeting "hi") "!")})
+  {:status 202})
 
 (defn not-found-handler [_]
   {:status 404
