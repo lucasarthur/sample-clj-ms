@@ -15,13 +15,12 @@
    [ring.middleware.defaults :refer [wrap-defaults api-defaults]])
   (:gen-class))
 
-(def api
-  (-> routes
-      (wrap-exceptions)
-      (log-http-requests)
-      (wrap-metrics)
-      (wrap-defaults api-defaults)
-      (wrap-swagger swagger)))
+(def api (-> routes
+             (wrap-exceptions)
+             (log-http-requests)
+             (wrap-metrics)
+             (wrap-defaults api-defaults)
+             (wrap-swagger swagger)))
 
 (defn -main []
   (init-logs)
