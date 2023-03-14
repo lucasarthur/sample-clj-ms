@@ -1,5 +1,5 @@
 (ns sample.middleware.log
-  (:require [com.brunobonacci.mulog :refer [log]]))
+  (:require [sample.config.log :refer [log]]))
 
 (defn log-http-requests [handler]
   (fn [req]

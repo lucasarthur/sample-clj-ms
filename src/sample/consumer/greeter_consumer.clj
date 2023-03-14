@@ -1,5 +1,6 @@
 (ns sample.consumer.greeter-consumer
   (:require
+   [sample.config.log :refer [log]]
    [clojure.core.async :refer [chan]]
    [environ.core :refer [env]]
    [ketu.async.source :as s :refer [source]]
@@ -9,14 +10,14 @@
 (def raw-events (->source channel))
 
 (def consumer
-  (source channel {:brokers (-> env :kafka-brokers)
+  (source channel {:brokers (env :kafka-brokers)
                    :name "greeter-consumer"
                    :topic "GreetingDispatched"
                    :group-id "sample-greeter-group"
                    :value-type :string
                    :shape :value}))
 
-(def greetings (->> raw-events (consume-async #(println "saving " % " on database!"))))
+(def greetings (->> raw-events (consume-async #(log ::greeting-received :saving % :on :database))))
 
 (defn stop! []
   (s/stop! consumer))

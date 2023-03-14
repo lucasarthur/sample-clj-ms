@@ -8,7 +8,7 @@
 (def channel (chan 16))
 
 (def producer
-  (sink channel {:brokers (-> env :kafka-brokers)
+  (sink channel {:brokers (env :kafka-brokers)
                  :name "greeter-producer"
                  :topic "GreetingDispatched"
                  :value-type :string
