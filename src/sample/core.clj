@@ -2,10 +2,9 @@
   (:require
    [aleph.http :refer [start-server]]
    [aleph.netty :refer [port]]
-   [com.brunobonacci.mulog :refer [log]]
-   [sample.util.app :refer [on-shutdown]]
-   [sample.config.log :refer [init-logs]]
    [environ.core :refer [env]]
+   [sample.util.app :refer [on-shutdown]]
+   [sample.config.log :refer [log-on-kafka stop-loggers! init-loggers!]]
    [sample.config.metrics :refer [set-health-status!]]
    [sample.producer.greeter-producer :as greeter-producer]
    [sample.consumer.greeter-consumer :as greeter-consumer]
@@ -26,12 +25,14 @@
              (wrap-swagger swagger)))
 
 (defn -main []
-  (init-logs)
+  (init-loggers!)
   (let [server (start-server api {:port (-> env :port Integer/parseInt)})]
-    (log ::server-started :port (port server))
+    (log-on-kafka ::server-started :port (port server))
     (set-health-status! :up)
-    (on-shutdown
-     (fn []
-       (greeter-consumer/stop!)
-       (greeter-producer/stop!)
-       (.close server)))))
+    (on-shutdown (fn []
+                   (log-on-kafka ::stopping-server)
+                   (set-health-status! :down)
+                   (greeter-consumer/stop!)
+                   (greeter-producer/stop!)
+                   (.close server)
+                   (stop-loggers!)))))

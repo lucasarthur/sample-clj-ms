@@ -1,6 +1,6 @@
 (ns sample.middleware.exception
   (:require
-   [com.brunobonacci.mulog :refer [log]]
+   [sample.config.log :refer [log]]
    [cheshire.core :refer [generate-string]]
    [clojure.string :refer [split]])
   (:import [clojure.lang ExceptionInfo]))
