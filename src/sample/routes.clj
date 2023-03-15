@@ -1,8 +1,8 @@
 (ns sample.routes
   (:require
    [sample.handlers :refer :all]
-   [sample.middleware.json :refer [wrap-json-response wrap-json]]
-   [sample.middleware.sse :refer [wrap-sse-response]]
+   [web.commons.middleware.json :refer [wrap-json-response wrap-json]]
+   [web.commons.middleware.sse :refer [wrap-sse-response]]
    [compojure.core :refer [defroutes GET POST]]
    [compojure.route :refer [not-found]]))
 

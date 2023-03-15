@@ -1,10 +1,11 @@
 (ns sample.handlers
   (:require
    [manifold.stream :as s]
+   [clojure.core.async :refer [put!]]
    [cheshire.core :refer [generate-string]]
-   [sample.util.sse :refer [->sse]]
-   [sample.producer.greeter-producer :refer [produce-greeting]]
-   [sample.consumer.greeter-consumer :refer [raw-events]]))
+   [web.commons.util.sse :refer [->sse]]
+   [sample.producer.greeter-producer :refer [producer]]
+   [sample.consumer.greeter-consumer :refer [consumer]]))
 
 (defn divide-by-zero-handler [_]
   {:status 200
@@ -28,12 +29,15 @@
               (s/map #(-> {:uuid %} generate-string ->sse)))})
 
 (defn produce-greeting-handler [name greeting]
-  (produce-greeting {:greeting (str name " says " (or greeting "hi") "!")})
+  (->> (str name " says " (or greeting "hi") "!")
+       (hash-map :greeting)
+       (generate-string)
+       (put! (:channel producer)))
   {:status 202})
 
 (defn consume-greetings-handler [_]
   {:status 200
-   :body (s/map ->sse raw-events)})
+   :body (s/map ->sse (:stream consumer))})
 
 (defn not-found-handler [_]
   {:status 404
