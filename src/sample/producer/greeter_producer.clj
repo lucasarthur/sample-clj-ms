@@ -1,21 +1,9 @@
 (ns sample.producer.greeter-producer
-  (:require
-   [clojure.core.async :refer [chan put! close!]]
-   [environ.core :refer [env]]
-   [ketu.async.sink :refer [sink]]
-   [cheshire.core :refer [generate-string]]))
+  (:require [web.commons.kafka :refer [create-producer]]))
 
-(def channel (chan 16))
-
-(def producer
-  (sink channel {:brokers (env :kafka-brokers)
-                 :name "greeter-producer"
-                 :topic "GreetingDispatched"
-                 :value-type :string
-                 :shape :value}))
-
-(defn produce-greeting [greeting]
-  (put! channel (generate-string greeting)))
-
-(defn stop! []
-  (close! channel))
+(def producer (create-producer
+               {:name "greeter-producer"
+                :topic "GreetingDispatched"
+                :value-type :string
+                :shape :value
+                :channel-size 16}))
