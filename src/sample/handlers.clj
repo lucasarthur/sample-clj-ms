@@ -1,7 +1,6 @@
 (ns sample.handlers
   (:require
-   [manifold.stream :as s]
-   [clojure.core.async :refer [put!]]
+   [manifold.stream :as s :refer [put! periodically]]
    [cheshire.core :refer [generate-string]]
    [web.commons.util.sse :refer [->sse]]
    [sample.producer.greeter-producer :refer [producer]]
@@ -25,14 +24,14 @@
 
 (defn uuid-handler [_]
   {:status 200
-   :body (->> (s/periodically 2500 random-uuid)
+   :body (->> (periodically 2500 random-uuid)
               (s/map #(-> {:uuid %} generate-string ->sse)))})
 
 (defn produce-greeting-handler [name greeting]
   (->> (str name " says " (or greeting "hi") "!")
        (hash-map :greeting)
        (generate-string)
-       (put! (:channel producer)))
+       (put! (:sink producer)))
   {:status 202})
 
 (defn consume-greetings-handler [_]
